@@ -1,7 +1,47 @@
-var builder = WebApplication.CreateBuilder(args);
 
+using Evolve;  //biblioteca de Migraciones (1)
+using Npgsql;  //proveedor de PostgreSql
+
+using Microsoft.EntityFrameworkCore; //  EF Core
+
+
+var builder = WebApplication.CreateBuilder(args);
+//---------------------------------------------------------------------------------------------
+//cadena de conexion del appsetting.js  (2)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//EVOLVE para manejar las migraciones (3)
+using var connection = new NpgsqlConnection(connectionString);
+var evolve = new Evolve.Evolve(connection, msg => Console.WriteLine(msg))
+{
+    Locations = new[] { "Resources/sql" },// Ruta donde está el archivo SQL
+    IsEraseDisabled = true
+};
+
+//evolve.Erase(); // Limpia completamente la base de datos
+//evolve.Migrate(); // Aplica las migraciones
+
+try
+{
+    evolve.Migrate();
+    Console.WriteLine("Migraciones aplicadas correctamente.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error al aplicar migraciones: {ex.Message}");
+}
+
+//---------------------------------------------------------------------------------------
+// REGISTRAR SERVICIOS
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//builder.Services.AddDbContext<EntityDbContext>(options => options.UseNpgsql(connectionString));
+
+//habilitar Controladores
+builder.Services.AddControllers();
+
+//Registrar El repositorio
+//builder.Services.AddScoped<ICartasCategoryRepository, CartasCategoryRepository>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -14,31 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
+app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
