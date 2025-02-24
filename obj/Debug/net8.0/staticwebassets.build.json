@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "DiGkUm9S0tTsNkcPkJXTZY1jhzxWgKdItP5C9jhCrBM=",
+  "Source": "crm-app",
+  "BasePath": "_content/crm-app",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
