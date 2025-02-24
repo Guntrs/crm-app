@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Dto\" />
+    <Folder Include="Models\" />
+    <Folder Include="Repositories\" />
     <Folder Include="Resources\" />
     <Folder Include="Utils\" />
   </ItemGroup>

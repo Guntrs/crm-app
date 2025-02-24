@@ -107,3 +107,4 @@ C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\obj\Debug\net8.0\crm-ap
 C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\obj\Debug\net8.0\crm-app.genruntimeconfig.cache
 C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\obj\Debug\net8.0\ref\crm-app.dll
 C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Evolve.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\obj\Debug\net8.0\crm-app.sourcelink.json
