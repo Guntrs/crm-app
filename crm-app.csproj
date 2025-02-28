@@ -25,7 +25,6 @@
     <Folder Include="Dto\" />
     <Folder Include="Models\" />
     <Folder Include="Repositories\" />
-    <Folder Include="Resources\sql\" />
   </ItemGroup>
 
 </Project>
