@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS crm_typologies
 (
     typology_id         BIGSERIAL PRIMARY KEY,
-    parent_typology_id  BIGINT,  -- Permite NULL para la raíz
+    parent_typology_id  BIGINT,  
 
     description         TEXT NOT NULL DEFAULT 'S/D',
     value1              TEXT NOT NULL DEFAULT 'S/D',
