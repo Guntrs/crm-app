@@ -1,34 +1,28 @@
 --  TABLA TIPOLOGÍAS (1. crm_typologies)
 CREATE TABLE IF NOT EXISTS crm_typologies
 (
-    typology_id        BIGSERIAL PRIMARY KEY,
-    parent_typology_id BIGINT NOT NULL DEFAULT 100,
+    typology_id         BIGSERIAL PRIMARY KEY,
+    parent_typology_id  BIGINT,  -- Permite NULL para la raíz
 
-    name              VARCHAR(255) NOT NULL DEFAULT 'S/D',
-    description       TEXT NOT NULL DEFAULT 'S/D',
-    value1           TEXT NOT NULL DEFAULT 'S/D',
-    value2           TEXT NOT NULL DEFAULT 'S/D',
-    value3           TEXT NOT NULL DEFAULT 'S/D',
-    state            BIGINT NOT NULL DEFAULT 501,  -- Estado de la tipología (activo)
+    description         TEXT NOT NULL DEFAULT 'S/D',
+    value1              TEXT NOT NULL DEFAULT 'S/D',
+    value2              TEXT NOT NULL DEFAULT 'S/D',
+    value3              TEXT NOT NULL DEFAULT 'S/D',
+    state               BIGINT NOT NULL DEFAULT 501,  -- 501 = Activo
 
-    created_by       BIGINT NOT NULL DEFAULT 0,
-    creation_date    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    modified_by      BIGINT NOT NULL DEFAULT 0,
-    modification_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    created_by          BIGINT NOT NULL DEFAULT 0,
+    creation_date       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    modified_by         BIGINT NOT NULL DEFAULT 0,
+    modification_date   TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
-    -- Restricciones
+    -- Clave foránea autorreferenciada
     CONSTRAINT fk_parent_typology FOREIGN KEY (parent_typology_id)
-    REFERENCES crm_typologies(typology_id) ON DELETE SET DEFAULT,
-
-    CONSTRAINT uq_typology_name UNIQUE (name) --Evita que haya dos tipologías con el mismo nombre
+    REFERENCES crm_typologies (typology_id) ON DELETE SET NULL  -- Si borras el padre, los hijos quedan huérfanos con parent_typology_id = NULL
     );
-
--- cometarios
 
 COMMENT ON TABLE crm_typologies IS 'TABLA DE TIPOLOGÍAS GENERALES DEL CRM';
 COMMENT ON COLUMN crm_typologies.typology_id IS 'IDENTIFICADOR UNICO DE LA TIPOLOGIA';
-COMMENT ON COLUMN crm_typologies.parent_typology_id IS 'REFERENCIA A LA TIPOLOGÍA PADRE';
-COMMENT ON COLUMN crm_typologies.name IS 'NOMBRE DE LA TIPOLOGÍA';
+COMMENT ON COLUMN crm_typologies.parent_typology_id IS 'REFERENCIA A LA TIPOLOGÍA PADRE (NULL si es raíz)';
 COMMENT ON COLUMN crm_typologies.description IS 'DESCRIPCIÓN DE LA TIPOLOGÍA';
 COMMENT ON COLUMN crm_typologies.value1 IS 'VALOR ADICIONAL 1';
 COMMENT ON COLUMN crm_typologies.value2 IS 'VALOR ADICIONAL 2';
@@ -39,7 +33,6 @@ COMMENT ON COLUMN crm_typologies.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_typologies.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_typologies.modification_date IS 'AUDITORIA: FECHA MODIFICACION';
 
-        
         
 --  TABLA PERSONAS (2. crm_persons)---------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_persons
