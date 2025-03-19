@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Gunter\\Desktop\\peopleapps\\2.rider\\6.crm\\crm-app\\crm-app.csproj": {}
+    "C:\\Users\\Gunter\\Desktop\\PeopleApps\\2.Rider\\6.CRM\\crm-app\\crm-app.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Gunter\\Desktop\\peopleapps\\2.rider\\6.crm\\crm-app\\crm-app.csproj": {
+    "C:\\Users\\Gunter\\Desktop\\PeopleApps\\2.Rider\\6.CRM\\crm-app\\crm-app.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gunter\\Desktop\\peopleapps\\2.rider\\6.crm\\crm-app\\crm-app.csproj",
+        "projectUniqueName": "C:\\Users\\Gunter\\Desktop\\PeopleApps\\2.Rider\\6.CRM\\crm-app\\crm-app.csproj",
         "projectName": "crm-app",
-        "projectPath": "C:\\Users\\Gunter\\Desktop\\peopleapps\\2.rider\\6.crm\\crm-app\\crm-app.csproj",
+        "projectPath": "C:\\Users\\Gunter\\Desktop\\PeopleApps\\2.Rider\\6.CRM\\crm-app\\crm-app.csproj",
         "packagesPath": "C:\\Users\\Gunter\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gunter\\Desktop\\peopleapps\\2.rider\\6.crm\\crm-app\\obj\\",
+        "outputPath": "C:\\Users\\Gunter\\Desktop\\PeopleApps\\2.Rider\\6.CRM\\crm-app\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

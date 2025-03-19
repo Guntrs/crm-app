@@ -1,20 +1,26 @@
---  TABLA TIPOLOGÍAS (crm_typologies)
+--  TABLA TIPOLOGÍAS (1. crm_typologies)
 CREATE TABLE IF NOT EXISTS crm_typologies
 (
     typology_id        BIGSERIAL PRIMARY KEY,
-    parent_typology_id BIGINT NOT NULL DEFAULT 100, 
-    name              VARCHAR(255) NOT NULL DEFAULT 'S/D', 
-    description       TEXT NOT NULL DEFAULT 'S/D',  
-    value1           TEXT NOT NULL DEFAULT 'S/D',  
-    value2           TEXT NOT NULL DEFAULT 'S/D',  
-    value3           TEXT NOT NULL DEFAULT 'S/D',  
-    state            BIGINT NOT NULL DEFAULT 501,  -- Estado de la tipología (activo/inactivo)
+    parent_typology_id BIGINT NOT NULL DEFAULT 100,
 
--- Auditoría
+    name              VARCHAR(255) NOT NULL DEFAULT 'S/D',
+    description       TEXT NOT NULL DEFAULT 'S/D',
+    value1           TEXT NOT NULL DEFAULT 'S/D',
+    value2           TEXT NOT NULL DEFAULT 'S/D',
+    value3           TEXT NOT NULL DEFAULT 'S/D',
+    state            BIGINT NOT NULL DEFAULT 501,  -- Estado de la tipología (activo)
+
     created_by       BIGINT NOT NULL DEFAULT 0,
     creation_date    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     modified_by      BIGINT NOT NULL DEFAULT 0,
-    modification_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    modification_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+
+    -- Restricciones
+    CONSTRAINT fk_parent_typology FOREIGN KEY (parent_typology_id)
+    REFERENCES crm_typologies(typology_id) ON DELETE SET DEFAULT,
+
+    CONSTRAINT uq_typology_name UNIQUE (name) --Evita que haya dos tipologías con el mismo nombre
     );
 
 -- cometarios
@@ -32,8 +38,10 @@ COMMENT ON COLUMN crm_typologies.created_by IS 'AUDITORIA: CREADO POR';
 COMMENT ON COLUMN crm_typologies.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_typologies.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_typologies.modification_date IS 'AUDITORIA: FECHA MODIFICACION';
- 
---  TABLA PERSONAS (crm_persons)---------------------------------------------
+
+        
+        
+--  TABLA PERSONAS (2. crm_persons)---------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_persons
 (
     person_id              BIGSERIAL PRIMARY KEY,
@@ -97,7 +105,7 @@ COMMENT ON COLUMN crm_persons.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_persons.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_persons.modification_date IS 'AUDITORIA: FECHA MODIFICACION'; 
         
---  TABLA USUARIOS (crm_users)-----------------------------------------------------------
+--  TABLA USUARIOS (3. crm_users)-----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_users
 (
     user_id               BIGSERIAL PRIMARY KEY,
@@ -165,14 +173,14 @@ COMMENT ON COLUMN crm_users.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_users.modification_date IS 'AUDITORIA: FECHA MODIFICACION';        
                 
         
--- TABLA ORGANIZACIONES (crm_organizations)---------------------
+-- TABLA ORGANIZACIONES (4. crm_organizations)---------------------
 CREATE TABLE IF NOT EXISTS crm_organizations
 (
     organization_id         BIGSERIAL PRIMARY KEY,
     organization_name       VARCHAR(255) UNIQUE NOT NULL DEFAULT 'S/D',  -- Nombre único de la organización
     organization_phone      VARCHAR(50) NOT NULL DEFAULT 'S/D', -- Teléfono
     logo_url               TEXT DEFAULT NULL, -- URL del logo de la organización
-    primary_contact_email   VARCHAR(255) UNIQUE NOT NULL DEFAULT '@', -- Email de contacto único
+    primary_contact_email   VARCHAR(255) UNIQUE DEFAULT NULL, -- Email de contacto único
 
     sector_type            BIGINT NOT NULL DEFAULT 220
     REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT, -- 220 = "Sector Type"
@@ -200,7 +208,7 @@ COMMENT ON COLUMN crm_organizations.creation_date IS 'AUDITORIA: FECHA CREACION'
 COMMENT ON COLUMN crm_organizations.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_organizations.modification_date IS 'AUDITORIA: FECHA MODIFICACION';
         
---  TABLA CLIENTES (crm_customers)-------------------------------------------------------------
+--  TABLA CLIENTES (5. crm_customers)-------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_customers
 (
     customer_id            BIGSERIAL PRIMARY KEY,
@@ -208,7 +216,7 @@ CREATE TABLE IF NOT EXISTS crm_customers
 
     customer_full_name     VARCHAR(255) NOT NULL DEFAULT 'S/D',  -- Nombre completo del cliente
     customer_job_position  VARCHAR(255) NOT NULL DEFAULT 'S/D',  -- Cargo en la organización
-    customer_email         VARCHAR(255) UNIQUE NOT NULL DEFAULT '@',  -- Correo electrónico único
+    customer_email         VARCHAR(255) UNIQUE DEFAULT NULL,  -- Correo electrónico único
     customer_primary_phone VARCHAR(50) NOT NULL DEFAULT 'S/D',  -- Teléfono principal
     customer_secondary_phone VARCHAR(50) DEFAULT NULL,  -- Teléfono secundario
     customer_nit           VARCHAR(50) UNIQUE DEFAULT NULL,  -- Número de identificación tributaria
@@ -251,7 +259,7 @@ COMMENT ON COLUMN crm_customers.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_customers.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_customers.modification_date IS 'AUDITORIA: FECHA MODIFICACION';   
         
---  TABLA PRODUCTOS (crm_products)---------------------------------------------------------
+--  TABLA PRODUCTOS (6. crm_products)---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_products
 (
     product_id         BIGSERIAL PRIMARY KEY,
@@ -294,14 +302,14 @@ COMMENT ON COLUMN crm_products.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_products.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_products.modification_date IS 'AUDITORIA: FECHA MODIFICACION';
         
---  TABLA TICKETS (crm_tickets)-----------------------------------------------------------
+--  TABLA TICKETS (7. crm_tickets)-----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_tickets
 (
     ticket_id        BIGSERIAL PRIMARY KEY,
     ticket_key       VARCHAR(255) NOT NULL UNIQUE,  -- Clave única del ticket
 
     customer_id      BIGINT NOT NULL,  -- Referencia a crm_customers
-    user_id         BIGINT NOT NULL,  -- Referencia a crm_users
+    user_id         BIGINT DEFAULT NULL,  -- Referencia a crm_users
 
     subject         VARCHAR(255) NOT NULL DEFAULT 'S/D',  -- Asunto del ticket
     description     TEXT DEFAULT 'S/D',  -- Descripción del problema o solicitud
@@ -354,7 +362,7 @@ COMMENT ON COLUMN crm_tickets.modification_date IS 'AUDITORIA: FECHA MODIFICACIO
         
         
 
---  TABLA EQUIPOS (crm_teams)----------------------------------------------------
+--  TABLA EQUIPOS (8. crm_teams)----------------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_teams
 (
     team_id          BIGSERIAL PRIMARY KEY,
@@ -385,7 +393,7 @@ COMMENT ON COLUMN crm_teams.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_teams.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_teams.modification_date IS 'AUDITORIA: FECHA MODIFICACION';  
         
- --  TABLA RELACIÓN USUARIOS - EQUIPOS (crm_users_teams)--------------------------------------
+ --  TABLA RELACIÓN USUARIOS - EQUIPOS (9. crm_users_teams)--------------------------------------
 CREATE TABLE IF NOT EXISTS crm_users_teams
 (
     users_team_id   BIGSERIAL PRIMARY KEY,
@@ -425,17 +433,17 @@ COMMENT ON COLUMN crm_users_teams.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_users_teams.modification_date IS 'AUDITORIA: FECHA MODIFICACION';  
         
         
---  TABLA ESTABLECIMIENTOS (crm_establishment)------------------------------
+--  TABLA ESTABLECIMIENTOS (10. crm_establishment)------------------------------
 CREATE TABLE IF NOT EXISTS crm_establishment
 (
     establishment_id         BIGSERIAL PRIMARY KEY,
     parent_establishment_id  BIGINT DEFAULT NULL,  -- Referencia a otro establecimiento (si aplica)
-    establishment_key        VARCHAR(255) UNIQUE NOT NULL DEFAULT 'S/D',  -- Clave única del establecimiento
+    establishment_key        VARCHAR(255) UNIQUE NOT NULL,  -- Clave única del establecimiento
 
     establishment_name       VARCHAR(255) NOT NULL DEFAULT 'S/D',  -- Nombre del establecimiento
     establishment_description TEXT DEFAULT 'S/D',  -- Descripción
     establishment_address    VARCHAR(500) NOT NULL DEFAULT 'S/D', -- Dirección
-    establishment_email      VARCHAR(255) UNIQUE NOT NULL DEFAULT '@', -- Email único
+    establishment_email      VARCHAR(255) UNIQUE NOT NULL, -- Email único
     establishment_phone      VARCHAR(50) NOT NULL DEFAULT 'S/D', -- Teléfono
     establishment_type       BIGINT NOT NULL DEFAULT 220
     REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT, -- 220 = "Sector Type"
@@ -474,7 +482,7 @@ COMMENT ON COLUMN crm_establishment.creation_date IS 'AUDITORIA: FECHA CREACION'
 COMMENT ON COLUMN crm_establishment.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_establishment.modification_date IS 'AUDITORIA: FECHA MODIFICACION';
         
---  TABLA RELACIÓN USUARIOS - ESTABLECIMIENTOS (crm_users_establishment)----------------------
+--  TABLA RELACIÓN USUARIOS - ESTABLECIMIENTOS (11. crm_users_establishment)----------------------
 CREATE TABLE IF NOT EXISTS crm_users_establishment
 (
     users_sucursal_id  BIGSERIAL PRIMARY KEY,
@@ -515,12 +523,12 @@ COMMENT ON COLUMN crm_users_establishment.modification_date IS 'AUDITORIA: FECHA
         
 
 
--- TABLA LEADS (crm_leads)----------------------------------------------------
+-- TABLA LEADS (12. crm_leads)----------------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_leads
 (
     lead_id               BIGSERIAL PRIMARY KEY,
     customer_id           BIGINT NOT NULL,  -- Referencia a crm_customers
-    user_id               BIGINT NOT NULL,  -- Referencia a crm_users
+    user_id               BIGINT DEFAULT NULL,  -- Referencia a crm_users
 
     lead_name             VARCHAR(255) NOT NULL DEFAULT 'S/D',  -- Nombre del lead
     lead_description      TEXT DEFAULT 'S/D',  -- Descripción del lead
@@ -536,8 +544,8 @@ CREATE TABLE IF NOT EXISTS crm_leads
 
     next_action_date      TIMESTAMP WITH TIME ZONE DEFAULT NULL, -- Próxima acción
 
-                                                lead_source           BIGINT NOT NULL DEFAULT 200
-                                                REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT,  -- 200 = "Contact Source"
+    lead_source           BIGINT NOT NULL DEFAULT 200
+    REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT,  -- 200 = "Contact Source"
 
     lead_type             VARCHAR(255) NOT NULL DEFAULT 'S/D', -- Tipo de lead
 
@@ -573,12 +581,12 @@ COMMENT ON COLUMN crm_leads.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_leads.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_leads.modification_date IS 'AUDITORIA: FECHA MODIFICACION';
         
--- TABLA OPORTUNIDADES (crm_opportunities)-------------------------------------------
+-- TABLA OPORTUNIDADES (13. crm_opportunities)-------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_opportunities
 (
     opportunity_id        BIGSERIAL PRIMARY KEY,
     lead_id              BIGINT NOT NULL,  -- Referencia a crm_leads
-    user_id              BIGINT NOT NULL,  -- Referencia a crm_users
+    user_id              BIGINT DEFAULT NULL,  -- Referencia a crm_users
     organization_id      BIGINT NOT NULL,  -- Referencia a crm_organizations
 
     opportunity_name     VARCHAR(255) NOT NULL DEFAULT 'S/D',  -- Nombre de la oportunidad
@@ -594,10 +602,11 @@ CREATE TABLE IF NOT EXISTS crm_opportunities
     REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT,  -- 250 = "Currency"
 
     close_date         TIMESTAMP WITH TIME ZONE DEFAULT NULL,  -- Fecha estimada de cierre
-                                                product_id         BIGINT DEFAULT NULL,  -- Producto asociado (si aplica)
+    product_id         BIGINT DEFAULT NULL,  -- Producto asociado (si aplica)
 
-                                                stage              BIGINT NOT NULL DEFAULT 230
-                                                REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT,  -- 230 = "Opportunity Stage"
+    stage              BIGINT NOT NULL DEFAULT 230
+        
+    REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT,  -- 230 = "Opportunity Stage"
 
 -- Auditoría
     created_by         BIGINT NOT NULL DEFAULT 0,
@@ -607,7 +616,7 @@ CREATE TABLE IF NOT EXISTS crm_opportunities
 
     -- Relaciones
     CONSTRAINT fk_lead FOREIGN KEY (lead_id) REFERENCES crm_leads (lead_id) ON DELETE CASCADE,
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES crm_users (user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES crm_users (user_id)  ON DELETE SET NULL,
     CONSTRAINT fk_organization FOREIGN KEY (organization_id) REFERENCES crm_organizations (organization_id) ON DELETE CASCADE,
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES crm_products (product_id) ON DELETE SET NULL
     );
@@ -635,14 +644,14 @@ COMMENT ON COLUMN crm_opportunities.creation_date IS 'AUDITORIA: FECHA CREACION'
 COMMENT ON COLUMN crm_opportunities.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_opportunities.modification_date IS 'AUDITORIA: FECHA MODIFICACION'; 
         
---  TABLA NEGOCIOS/CERRADOS (crm_deals)---------------------------------------------
+--  TABLA NEGOCIOS/CERRADOS (14. crm_deals)---------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_deals
 (
     deal_id              BIGSERIAL PRIMARY KEY,
     customer_id          BIGINT NOT NULL,  -- Referencia a crm_customers
     opportunity_id       BIGINT NOT NULL,  -- Referencia a crm_opportunities
     organization_id      BIGINT NOT NULL,  -- Referencia a crm_organizations
-    user_id             BIGINT NOT NULL,  -- Referencia a crm_users
+    user_id              BIGINT DEFAULT NULL,  -- Referencia a crm_users
 
     deal_name           VARCHAR(255) NOT NULL DEFAULT 'S/D',  -- Nombre del negocio
     deal_description    TEXT DEFAULT 'S/D',  -- Descripción del negocio
@@ -690,11 +699,11 @@ COMMENT ON COLUMN crm_deals.creation_date IS 'AUDITORIA: FECHA CREACION';
 COMMENT ON COLUMN crm_deals.modified_by IS 'AUDITORIA: MODIFICADO POR';
 COMMENT ON COLUMN crm_deals.modification_date IS 'AUDITORIA: FECHA MODIFICACION';    
         
---  TABLA ACTIVIDADES (crm_activities)--------------------------------------------------
+--  TABLA ACTIVIDADES (15. crm_activities)--------------------------------------------------
 CREATE TABLE IF NOT EXISTS crm_activities
 (
     activity_id        BIGSERIAL PRIMARY KEY,
-    user_id           BIGINT NOT NULL,  -- Referencia a crm_users
+    user_id           BIGINT DEFAULT NULL,  -- Referencia a crm_users
     customer_id       BIGINT DEFAULT NULL,  -- Referencia a crm_customers
     lead_id           BIGINT DEFAULT NULL,  -- Referencia a crm_leads
     organization_id   BIGINT DEFAULT NULL,  -- Referencia a crm_organizations
@@ -721,7 +730,9 @@ CREATE TABLE IF NOT EXISTS crm_activities
     modification_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     -- Relaciones
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES crm_users (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user FOREIGN KEY (user_id)
+    REFERENCES crm_users (user_id)
+                                            ON DELETE SET NULL,
     CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES crm_customers (customer_id) ON DELETE SET NULL,
     CONSTRAINT fk_lead FOREIGN KEY (lead_id) REFERENCES crm_leads (lead_id) ON DELETE SET NULL,
     CONSTRAINT fk_organization FOREIGN KEY (organization_id) REFERENCES crm_organizations (organization_id) ON DELETE SET NULL,
