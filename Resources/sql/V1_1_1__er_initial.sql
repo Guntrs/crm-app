@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS crm_users
     person_id             BIGINT NOT NULL,  -- Relación con crm_persons
 
     user_name             VARCHAR(255) UNIQUE NOT NULL,  -- Nombre de usuario único
-    password              TEXT NOT NULL,  -- Contraseña encriptada
+    password              VARCHAR(255) NOT NULL,  -- Contraseña encriptada
     password_change_date  TIMESTAMP WITH TIME ZONE DEFAULT NOW(),  -- Última fecha de cambio de contraseña
     access_attempt        INTEGER NOT NULL DEFAULT 0,  -- Intentos de acceso fallidos
 
@@ -169,13 +169,16 @@ COMMENT ON COLUMN crm_users.modification_date IS 'AUDITORIA: FECHA MODIFICACION'
 -- TABLA ORGANIZACIONES (4. crm_organizations)---------------------
 CREATE TABLE IF NOT EXISTS crm_organizations
 (
-    organization_id         BIGSERIAL PRIMARY KEY,
-    organization_name       VARCHAR(255) UNIQUE NOT NULL DEFAULT 'S/D',  -- Nombre único de la organización
-    organization_phone      VARCHAR(50) NOT NULL DEFAULT 'S/D', -- Teléfono
-    logo_url               TEXT DEFAULT NULL, -- URL del logo de la organización
-    primary_contact_email   VARCHAR(255) UNIQUE DEFAULT NULL, -- Email de contacto único
+    organization_id            BIGSERIAL PRIMARY KEY,
+    organization_name          VARCHAR(255) UNIQUE NOT NULL DEFAULT 'S/D',  -- Nombre único de la organización
+    organization_description   VARCHAR(255), -- Descripción de la organización 
+    organization_phone         BIGINT       NOT NULL DEFAULT 0, -- Teléfono
+    organization_address       VARCHAR(500) NOT NULL DEFAULT 'S/D',
+    logo_url                   TEXT DEFAULT NULL, -- URL del logo de la organización
+    primary_contact_email      VARCHAR(255) UNIQUE DEFAULT NULL, -- Email de contacto único
+    organization_employee_count BIGINT DEFAULT NULL, -- Número de empleados
 
-    sector_type            BIGINT NOT NULL DEFAULT 220
+    sector_type                BIGINT NOT NULL DEFAULT 220
     REFERENCES crm_typologies (typology_id) ON DELETE SET DEFAULT, -- 220 = "Sector Type"
 
 -- Auditoría
@@ -191,7 +194,10 @@ COMMENT ON TABLE crm_organizations IS 'TABLA DE ORGANIZACIONES CLIENTES';
 
 COMMENT ON COLUMN crm_organizations.organization_id IS 'IDENTIFICADOR UNICO DE LA ORGANIZACION';
 COMMENT ON COLUMN crm_organizations.organization_name IS 'NOMBRE UNICO DE LA ORGANIZACION';
+COMMENT ON COLUMN crm_organizations.organization_description IS 'DESCRIPCION DE LA ORGANIZACION';
+COMMENT ON COLUMN crm_organizations.organization_address IS 'DIRECCION DE LA ORGANIZACION';
 COMMENT ON COLUMN crm_organizations.organization_phone IS 'NUMERO DE TELEFONO DE LA ORGANIZACION';
+COMMENT ON COLUMN crm_organizations.organization_employee_count IS 'NUMERO DE EMPLEADOS DE LA ORGANIZACION';
 COMMENT ON COLUMN crm_organizations.logo_url IS 'URL DEL LOGO DE LA ORGANIZACION';
 COMMENT ON COLUMN crm_organizations.primary_contact_email IS 'CORREO ELECTRONICO DE CONTACTO PRINCIPAL';
 COMMENT ON COLUMN crm_organizations.sector_type IS 'TIPO DE SECTOR DE LA ORGANIZACION (FK A crm_typologies, 220 = SECTOR TYPE)';
