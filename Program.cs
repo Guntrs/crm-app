@@ -1,4 +1,7 @@
 
+using crm_app.Repositories.Typologies;
+using crm_app.Repositories.TypologyRepository;
+using crm_app.Utils;
 using Evolve;  //biblioteca de Migraciones (1)
 using Npgsql;  //proveedor de PostgreSql
 
@@ -33,14 +36,13 @@ catch (Exception ex)
 //---------------------------------------------------------------------------------------
 // REGISTRAR SERVICIOS
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddDbContext<EntityDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<EntityDbContext>(options => options.UseNpgsql(connectionString));
 
 //habilitar Controladores
 builder.Services.AddControllers();
 
 //Registrar El repositorio
-//builder.Services.AddScoped<ICartasCategoryRepository, CartasCategoryRepository>();
+builder.Services.AddScoped<ICrmTypologyRepository, CrmTypologyRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
