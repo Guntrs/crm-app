@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\Organization\" />
-    <Folder Include="Models\General\" />
+    <Folder Include="Models\Operations\" />
   </ItemGroup>
 
 </Project>

@@ -11,5 +11,8 @@ namespace crm_app.Utils
         // Typologies
         public DbSet<CrmTypology> Typologies { get; set; }
         
+        //Teams
+        public DbSet<CrmTeam> Teams { get; set; }
+        
     }
 }

@@ -1,4 +1,5 @@
 
+using crm_app.Repositories.Team;
 using crm_app.Repositories.Typologies;
 using crm_app.Repositories.TypologyRepository;
 using crm_app.Utils;
@@ -41,9 +42,13 @@ builder.Services.AddDbContext<EntityDbContext>(options => options.UseNpgsql(conn
 //habilitar Controladores
 builder.Services.AddControllers();
 
+//-------------------------------------------------
 //Registrar El repositorio
 builder.Services.AddScoped<ICrmTypologyRepository, CrmTypologyRepository>();
+builder.Services.AddScoped<ICrmTeamRepository, CrmTeamRepository>();
 
+
+//------------------------------------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
