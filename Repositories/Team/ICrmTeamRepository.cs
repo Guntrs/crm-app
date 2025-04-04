@@ -11,5 +11,12 @@ namespace crm_app.Repositories.Team
 
         // Buscar un equipo por su ID
         public Task<TeamDto?> GetByIdAsync(long id);
+        
+        // nuevo
+        public Task<TeamDto> CreateAsync(TeamPostDto team);
+        
+        // Actualizar un equipo existente
+        Task<bool> UpdateAsync(long id, CrmTeamPutDto updatedTeamDto);
+       
     }
 }

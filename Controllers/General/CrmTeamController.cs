@@ -16,7 +16,8 @@ namespace crm_app.Controllers
         {
             _repository = repository;
         }
-
+        
+        //----------------------------Listar--------------------------
         // GET: api/team
         [HttpGet]
         public async Task<ActionResult> GetAll()
@@ -38,6 +39,7 @@ namespace crm_app.Controllers
             });
         }
 
+        //----------------------------Listar Id--------------------------
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
@@ -56,5 +58,49 @@ namespace crm_app.Controllers
                 Data = team 
             });
         }
+        
+        // POST: api/team
+        [HttpPost]
+        public async Task<ActionResult> Create([FromBody] TeamPostDto teamPostDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var createdTeam = await _repository.CreateAsync(teamPostDto);
+            
+            // Se retorna un código 201 con la ruta para obtener el registro y un mensaje
+            return CreatedAtAction(nameof(GetById), new { id = createdTeam.TeamId }, new 
+            { 
+                Message = "El equipo se creó correctamente.", 
+                Data = createdTeam 
+            });
+        }
+        
+        //----------------------------Actualizar--------------------------
+        // PUT: api/team/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(long id, [FromBody] CrmTeamPutDto updatedTeamDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            // Verificar que el ID de la URL coincida con el ID del DTO
+            if (id != updatedTeamDto.TeamId)
+            {
+                return BadRequest(new { Message = "El ID de la URL no coincide con el ID del equipo en el cuerpo." });
+            }
+            
+            var updateResult = await _repository.UpdateAsync(id, updatedTeamDto);
+            if (!updateResult)
+            {
+                return NotFound(new { Message = $"No se encontró el equipo con ID {id}." });
+            }
+            return Ok(new { Message = "El equipo se actualizó correctamente." });
+        }
+        
     }
 }

@@ -17,7 +17,7 @@ namespace crm_app.Repositories.Team
             _context = context;
         }
 
-        // Listar todos los equipos
+        //---------- Listar todos los equipos------------------
         public async Task<IEnumerable<TeamDto>> GetAll()
         {
             return await _context.Teams
@@ -35,7 +35,7 @@ namespace crm_app.Repositories.Team
                 .ToListAsync();
         }
 
-        // Buscar un equipo por su ID
+        //----------- Buscar un equipo por su ID------------------
         public async Task<TeamDto?> GetByIdAsync(long id)
         {
             return await _context.Teams
@@ -53,5 +53,72 @@ namespace crm_app.Repositories.Team
                 })
                 .FirstOrDefaultAsync();
         }
+        
+        
+        //---------- NUEVO: Crear un nuevo equipo ------------------
+        public async Task<TeamDto> CreateAsync(TeamPostDto teamPostDto)
+        {
+            // Mapear el DTO de creación a la entidad CrmTeam,
+            // asignando explícitamente State = 501 para evitar que EF envíe 0.
+            var newTeam = new CrmTeam
+            {
+                TeamName = teamPostDto.TeamName,
+                TeamDescription = string.IsNullOrEmpty(teamPostDto.TeamDescription) ? null : teamPostDto.TeamDescription,
+                State = 501 // Se asigna 501 para cumplir con la FK definida en la BD
+            };
+
+            // Agregar la entidad al contexto y guardar los cambios
+            await _context.Teams.AddAsync(newTeam);
+            await _context.SaveChangesAsync();
+
+            // Recargar la entidad para obtener los valores asignados por la BD (por ejemplo, auditoría y el ID)
+            await _context.Entry(newTeam).ReloadAsync();
+
+            // Mapear la entidad a TeamDto y retornarlo
+            return new TeamDto
+            {
+                TeamId = newTeam.TeamId,
+                TeamName = newTeam.TeamName,
+                TeamDescription = newTeam.TeamDescription,
+                State = newTeam.State,
+                CreatedBy = newTeam.CreatedBy,
+                CreationDate = newTeam.CreationDate,
+                ModifiedBy = newTeam.ModifiedBy,
+                ModificationDate = newTeam.ModificationDate
+            };
+        }
+        
+        // --------------------actulizar-----------
+        public async Task<bool> UpdateAsync(long id, CrmTeamPutDto updatedTeamDto)
+        {
+            // Buscar el equipo por su ID
+            var existingTeam = await _context.Teams.FindAsync(id);
+            if (existingTeam == null)
+            {
+                return false; // No se encontró el equipo
+            }
+
+            // Actualizar los campos del equipo
+            existingTeam.TeamName = updatedTeamDto.TeamName;
+            existingTeam.TeamDescription = updatedTeamDto.TeamDescription;
+            
+            // Si se envía un nuevo estado y es válido, se actualiza.
+            if (updatedTeamDto.State.HasValue)
+            {
+                existingTeam.State = updatedTeamDto.State.Value;
+            }
+
+            // Actualizar quién modifica y la fecha de modificación
+            if (updatedTeamDto.ModifiedBy.HasValue)
+            {
+                existingTeam.ModifiedBy = updatedTeamDto.ModifiedBy.Value;
+            }
+            existingTeam.ModificationDate = DateTime.UtcNow;
+
+            // Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        
     }
 }
