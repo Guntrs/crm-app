@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using crm_core.Utils;
+
 
 namespace crm_app.Models.General
 {
@@ -30,25 +32,25 @@ namespace crm_app.Models.General
         [Column("value3")]
         public string Value3 { get; set; }
 
-        [Required]
+        
         [Column("state")]
         public long State { get; set; }
 
-        [Required]
-        [Column("created_by")]
-        public long CreatedBy { get; set; }
 
-        [Required]
+        [Column("created_by")] 
+        public long CreatedBy { get; set; } = 0;
+
+        
         [Column("creation_date")]
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; set; } = CrmFunctions.GetDateTime();
 
-        [Required]
+       
         [Column("modified_by")]
-        public long ModifiedBy { get; set; }
+        public long ModifiedBy { get; set; } = 0;
 
-        [Required]
+       
         [Column("modification_date")]
-        public DateTime ModificationDate { get; set; }
+        public DateTime ModificationDate { get; set; } = CrmFunctions.GetDateTime();
         
         // Navegación recursiva (opcional)
         [ForeignKey("ParentTypologyId")]

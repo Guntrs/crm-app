@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using crm_app.Dto.Team;
 using crm_app.Models.General;
+using crm_core.Utils;
 using AppContext = crm_app.Utils.EntityDbContext; // Ajusta el namespace según tu proyecto
 
 namespace crm_app.Repositories.Team
@@ -58,60 +59,49 @@ namespace crm_app.Repositories.Team
         //---------- NUEVO: Crear un nuevo equipo ------------------
         public async Task<TeamDto> CreateAsync(TeamPostDto teamPostDto)
         {
-            // Mapear el DTO de creación a la entidad CrmTeam,
-            // asignando explícitamente State = 501 para evitar que EF envíe 0.
-            var newTeam = new CrmTeam
+            //Mapear el Dto al Modelo 
+            var crmTeam = new CrmTeam
             {
                 TeamName = teamPostDto.TeamName,
-                TeamDescription = string.IsNullOrEmpty(teamPostDto.TeamDescription) ? null : teamPostDto.TeamDescription,
-                State = 501 // Se asigna 501 para cumplir con la FK definida en la BD
+                TeamDescription = teamPostDto.TeamDescription,
             };
-
-            // Agregar la entidad al contexto y guardar los cambios
-            await _context.Teams.AddAsync(newTeam);
+            
+            //Agregar el team al contexto
+            await _context.AddAsync(crmTeam);
+            
+            //Guardar los cambios en la base de datos
             await _context.SaveChangesAsync();
-
-            // Recargar la entidad para obtener los valores asignados por la BD (por ejemplo, auditoría y el ID)
-            await _context.Entry(newTeam).ReloadAsync();
-
-            // Mapear la entidad a TeamDto y retornarlo
-            return new TeamDto
+            
+            // Mapear el modelo creado de vuelta al DTO
+            var createTeamDto = new TeamDto
             {
-                TeamId = newTeam.TeamId,
-                TeamName = newTeam.TeamName,
-                TeamDescription = newTeam.TeamDescription,
-                State = newTeam.State,
-                
+                TeamId = crmTeam.TeamId,
+                TeamName = crmTeam.TeamName,
+                TeamDescription = crmTeam.TeamDescription,
             };
+            
+            return createTeamDto;
         }
+        
         
         // --------------------actualizar-----------
         public async Task<bool> UpdateAsync(long id, TeamPutDto updatedTeamDto)
         {
             // Buscar el equipo por su ID
-            var existingTeam = await _context.Teams.FindAsync(id);
-            if (existingTeam == null)
+            var crmTeam = await _context.Teams.FindAsync(id);
+            
+            
+            if (crmTeam == null)
             {
                 return false; // No se encontró el equipo
             }
+        
+            //Mapear los valores del Dto al Modelo
+            crmTeam.TeamName = updatedTeamDto.TeamName;
+            crmTeam.TeamDescription = updatedTeamDto.TeamDescription;
 
-            // Actualizar los campos del equipo
-            existingTeam.TeamName = updatedTeamDto.TeamName;
-            existingTeam.TeamDescription = updatedTeamDto.TeamDescription;
+            crmTeam.ModificationDate = CrmFunctions.GetDateTime();
             
-            // Si se envía un nuevo estado y es válido, se actualiza.
-            if (updatedTeamDto.State.HasValue)
-            {
-                existingTeam.State = updatedTeamDto.State.Value;
-            }
-
-            // Actualizar quién modifica y la fecha de modificación
-            if (updatedTeamDto.ModifiedBy.HasValue)
-            {
-                existingTeam.ModifiedBy = updatedTeamDto.ModifiedBy.Value;
-            }
-            existingTeam.ModificationDate = DateTime.UtcNow;
-
             // Guardar los cambios en la base de datos
             await _context.SaveChangesAsync();
             return true;
