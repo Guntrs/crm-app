@@ -81,15 +81,12 @@ namespace crm_app.Repositories.Team
                 TeamName = newTeam.TeamName,
                 TeamDescription = newTeam.TeamDescription,
                 State = newTeam.State,
-                CreatedBy = newTeam.CreatedBy,
-                CreationDate = newTeam.CreationDate,
-                ModifiedBy = newTeam.ModifiedBy,
-                ModificationDate = newTeam.ModificationDate
+                
             };
         }
         
-        // --------------------actulizar-----------
-        public async Task<bool> UpdateAsync(long id, CrmTeamPutDto updatedTeamDto)
+        // --------------------actualizar-----------
+        public async Task<bool> UpdateAsync(long id, TeamPutDto updatedTeamDto)
         {
             // Buscar el equipo por su ID
             var existingTeam = await _context.Teams.FindAsync(id);

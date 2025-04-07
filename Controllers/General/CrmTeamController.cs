@@ -81,7 +81,7 @@ namespace crm_app.Controllers
         //----------------------------Actualizar--------------------------
         // PUT: api/team/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(long id, [FromBody] CrmTeamPutDto updatedTeamDto)
+        public async Task<ActionResult> Update(long id, [FromBody] TeamPutDto updatedTeamDto)
         {
             if (!ModelState.IsValid)
             {

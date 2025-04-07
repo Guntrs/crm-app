@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace crm_app.Dto.Team
 {
-    public class CrmTeamPutDto
+    public class TeamPutDto
     {
         // Generalmente, el ID se utiliza para saber qué registro se va a actualizar.
         // Se asume que lo recibes en el cuerpo o en la ruta (dependiendo de tu API).

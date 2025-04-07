@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using crm_app.Dto.Team;
+using crm_app.Dto.Team; // usar los dto
 
 namespace crm_app.Repositories.Team
 {
@@ -16,7 +16,7 @@ namespace crm_app.Repositories.Team
         public Task<TeamDto> CreateAsync(TeamPostDto team);
         
         // Actualizar un equipo existente
-        Task<bool> UpdateAsync(long id, CrmTeamPutDto updatedTeamDto);
+        Task<bool> UpdateAsync(long id, TeamPutDto updatedTeamDto);
        
     }
 }
