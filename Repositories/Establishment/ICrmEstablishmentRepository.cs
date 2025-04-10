@@ -11,13 +11,13 @@ namespace crm_app.Repositories.Establishment
         public Task<IEnumerable<EstablishmentDto>> GetAll();
 
         // Buscar un equipo por su ID
-       // public Task<EstablishmentDto?> GetByIdAsync(long id);
+        public Task<EstablishmentDto?> GetByIdAsync(long id);
         
         // nuevo
-       // public Task<EstablishmentDto> CreateAsync(EstablishmentPostDto establishment);
+        public Task<EstablishmentDto> CreateAsync(EstablishmentPostDto establishment);
         
         // Actualizar un equipo existente
-       // Task<bool> UpdateAsync(long id, EstablishmentPutDto updatedEstablishmentDto);
+        Task<bool> UpdateAsync(long id, EstablishmentPutDto updatedEstablishmentDto);
        
     }
 }
