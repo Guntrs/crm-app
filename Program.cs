@@ -1,4 +1,5 @@
 
+using crm_app.Repositories.Establishment;
 using crm_app.Repositories.Team;
 using crm_app.Repositories.Typologies;
 using crm_app.Repositories.TypologyRepository;
@@ -46,6 +47,7 @@ builder.Services.AddControllers();
 //Registrar El repositorio
 builder.Services.AddScoped<ICrmTypologyRepository, CrmTypologyRepository>();
 builder.Services.AddScoped<ICrmTeamRepository, CrmTeamRepository>();
+builder.Services.AddScoped<ICrmEstablishmentRepository, CrmEstablishmentRepository>();
 
 
 //------------------------------------------------

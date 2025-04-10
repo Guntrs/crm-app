@@ -14,5 +14,8 @@ namespace crm_app.Utils
         //Teams
         public DbSet<CrmTeam> Teams { get; set; }
         
+        //Establishment
+        public DbSet<CrmEstablishment> Establishment { get; set; }
+        
     }
 }
