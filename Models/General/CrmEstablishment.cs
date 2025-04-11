@@ -28,7 +28,7 @@ namespace crm_app.Models.General
         public string EstablishmentName { get; set; }
 
         [Column("establishment_description")]
-        public string EstablishmentDescription { get; set; } = "S/D";
+        public string EstablishmentDescription { get; set; }
 
         [Required]
         [Column("establishment_address")]
@@ -60,7 +60,7 @@ namespace crm_app.Models.General
 
         [Required]
         [Column("creation_date")]
-        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreationDate { get; set; } = CrmFunctions.GetDateTime();
 
         [Required]
         [Column("modified_by")]
@@ -68,7 +68,7 @@ namespace crm_app.Models.General
 
         [Required]
         [Column("modification_date")]
-        public DateTime ModificationDate { get; set; } = DateTime.UtcNow;
+        public DateTime ModificationDate { get; set; } = CrmFunctions.GetDateTime();
 
         // Relaciones
         public virtual CrmEstablishment ParentEstablishment { get; set; }
