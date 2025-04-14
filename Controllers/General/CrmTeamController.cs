@@ -20,7 +20,7 @@ namespace crm_app.Controllers
         //----------------------------Listar--------------------------
         // GET: api/team
         [HttpGet]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<TeamDto>>> GetAll()
         {
             var teams = await _repository.GetAll();
             if (teams == null || !teams.Any())
