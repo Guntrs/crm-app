@@ -16,7 +16,7 @@ namespace crm_app.Repositories.Team
         public Task<TeamDto> CreateAsync(TeamPostDto team);
         
         // Actualizar un equipo existente
-        Task<bool> UpdateAsync(long id, TeamPutDto updatedTeamDto);
+        public Task<bool> UpdateAsync(long id, TeamPutDto updatedTeamDto);
        
     }
 }

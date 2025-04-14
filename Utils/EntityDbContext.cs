@@ -17,5 +17,7 @@ namespace crm_app.Utils
         //Establishment
         public DbSet<CrmEstablishment> Establishment { get; set; }
         
+        //Person
+        public DbSet<CrmPerson> Person { get; set; }
     }
 }

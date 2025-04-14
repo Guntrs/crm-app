@@ -17,7 +17,7 @@ namespace crm_app.Repositories.Establishment
         public Task<EstablishmentDto> CreateAsync(EstablishmentPostDto establishment);
         
         // Actualizar un equipo existente
-        Task<bool> UpdateAsync(long id, EstablishmentPutDto updatedEstablishmentDto);
+        public Task<bool> UpdateAsync(long id, EstablishmentPutDto updatedEstablishmentDto);
        
     }
 }

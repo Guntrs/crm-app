@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace crm_app.Dto.Person
 {
-    public class CrmPersonPostDto
+    public class PersonPostDto
     {
         [Required(ErrorMessage = "La clave de la persona es obligatoria")]
         [MaxLength(255, ErrorMessage = "Máximo 255 caracteres")]

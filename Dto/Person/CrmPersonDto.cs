@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace crm_app.Dto.Person
 {
-    public class CrmPersonDto
+    public class PersonDto
     {
         [Required]
         public long PersonId { get; set; }
