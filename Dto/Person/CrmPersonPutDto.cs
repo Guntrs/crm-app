@@ -26,7 +26,7 @@ namespace crm_app.Dto.Person
         [MaxLength(255, ErrorMessage = "Máximo 255 caracteres")]
         public string? SecondSurname { get; set; }
 
-        public DateTime? Birthdate { get; set; }
+        public string? Birthdate { get; set; }
 
         [Required(ErrorMessage = "El género es obligatorio")]
         public long Gender { get; set; }

@@ -11,13 +11,15 @@ namespace crm_app.Repositories.Person
         public Task<IEnumerable<PersonDto>> GetAll();
         
         //buscar por id
-     //   public Task<PersonDto> GetByIdAsync(long id);
+       public Task<PersonDto?> GetByIdAsync(long id);
+     
         
+     
         // Nuevo
-      //  public Task<IEnumerable<PersonPostDto>> GetByCrmIdAsync(long person);
+        public Task<PersonDto> CreateAsync(PersonPostDto person);
         
         //actualizar
-      //  public Task<bool> UpdateAsync(long id, PersonPutDto updatepersonDto);
+        public Task<bool> UpdateAsync(long id, PersonPutDto updatepersonDto);
         
         
     }

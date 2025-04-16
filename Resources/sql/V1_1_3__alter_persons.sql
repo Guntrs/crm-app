@@ -1,0 +1,4 @@
+ALTER TABLE public.crm_persons
+ALTER COLUMN birthdate TYPE VARCHAR(255) USING birthdate::TEXT,
+ALTER COLUMN birthdate SET DEFAULT 'S/D',
+ALTER COLUMN birthdate SET NOT NULL;

@@ -36,7 +36,8 @@ namespace crm_app.Models.General
         public string SecondSurname { get; set; }
 
         [Column("birthdate")]
-        public DateTime? Birthdate { get; set; }
+        [MaxLength(255)]
+        public string Birthdate { get; set; }
 
         [Required]
         [Column("gender")]
