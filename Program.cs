@@ -5,6 +5,7 @@ using crm_app.Repositories.Person;
 using crm_app.Repositories.Team;
 using crm_app.Repositories.Typologies;
 using crm_app.Repositories.TypologyRepository;
+using crm_app.Repositories.User;
 using crm_app.Utils;
 using Evolve;  //biblioteca de Migraciones (1)
 using Npgsql;  //proveedor de PostgreSql
@@ -51,6 +52,9 @@ builder.Services.AddScoped<ICrmTypologyRepository, CrmTypologyRepository>();
 builder.Services.AddScoped<ICrmTeamRepository, CrmTeamRepository>();
 builder.Services.AddScoped<ICrmEstablishmentRepository, CrmEstablishmentRepository>();
 builder.Services.AddScoped<ICrmPersonRepository, CrmPersonRepository>();
+builder.Services.AddScoped<ICrmUserRepository, CrmUserRepository>();
+
+
 //------------------------------------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
