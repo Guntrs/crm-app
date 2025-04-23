@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace crm_app.Dto.User
 {
-    public class CrmUserPutDto
+    public class UserPutDto
     {
         [Required(ErrorMessage = "El ID del usuario es obligatorio")]
         public long UserId { get; set; }

@@ -40,54 +40,54 @@ namespace crm_app.Controllers
             });
         }
 
-        /*
+        
         //----------------------------Listar Id--------------------------
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
-            var establishment = await _repository.GetByIdAsync(id);
-            if (establishment == null)
+            var user = await _repository.GetByIdAsync(id);
+            if (user == null)
             {
                 return NotFound(new 
                 { 
-                    Message = $"No se encontró el Sucursal con ID {id}." 
+                    Message = $"No se encontró el Usuario con ID {id}." 
                 });
             }
 
             return Ok(new 
             { 
-                Message = "Sucursal Encontrada.", 
-                Data = establishment 
+                Message = "Usuario Encontrado.", 
+                Data = user
             });
         }
         
-        
+
         //-------------nuevo---------------------
         
         // POST: api/team
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] EstablishmentPostDto establishmentPostDto)
+        public async Task<ActionResult> Create([FromBody] UserPostDto userPostDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             
-            var createdEstablishment = await _repository.CreateAsync(establishmentPostDto);
+            var createdUser = await _repository.CreateAsync( userPostDto);
             
             // Se retorna un código 201 con la ruta para obtener el registro y un mensaje
-            return CreatedAtAction(nameof(GetById), new { id = createdEstablishment.EstablishmentId }, new 
+            return CreatedAtAction(nameof(GetById), new { id = createdUser.UserId }, new 
             { 
-                Message = "La Sucursal se creó correctamente.", 
-                Data = createdEstablishment
+                Message = "El usuario se creó correctamente.", 
+                Data = createdUser
             });
         }
         
-        
+                
         //----------------------------Actualizar--------------------------
         // PUT: api/team/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(long id, [FromBody] EstablishmentPutDto updatedEstablishmentDto)
+        public async Task<ActionResult> Update(long id, [FromBody] UserPutDto updatedUserDto)
         {
             if (!ModelState.IsValid)
             {
@@ -95,19 +95,19 @@ namespace crm_app.Controllers
             }
             
             // Verificar que el ID de la URL coincida con el ID del DTO
-            if (id != updatedEstablishmentDto.EstablishmentId)
+            if (id != updatedUserDto.UserId)
             {
                 return BadRequest(new { Message = "El ID de la URL no coincide con el ID del equipo en el cuerpo." });
             }
             
-            var updateResult = await _repository.UpdateAsync(id, updatedEstablishmentDto);
+            var updateResult = await _repository.UpdateAsync(id, updatedUserDto);
             if (!updateResult)
             {
-                return NotFound(new { Message = $"No se encontró la Sucursal con ID {id}." });
+                return NotFound(new { Message = $"No se encontró el Usuario con ID {id}." });
             }
-            return Ok(new { Message = "La Sucursal se actualizó correctamente." });
+            return Ok(new { Message = "El Usuario se actualizó correctamente." });
         }
-        */
+        
         
         
     }
