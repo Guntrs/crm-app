@@ -22,5 +22,8 @@ namespace crm_app.Utils
         
         //User
         public DbSet<CrmUser> User { get; set; }
+        
+        //UserTeam
+        public DbSet<CrmUserTeam> UserTeam { get; set; }
     }
 }

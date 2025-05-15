@@ -45,10 +45,7 @@ namespace crm_app.Models.General
         [Column("modification_date")]
         public DateTime ModificationDate { get; set; } = CrmFunctions.GetDateTime();
 
-        // Relaciones de navegación (opcional)
-        // public CrmUser User { get; set; }
-        // public CrmTeam Team { get; set; }
-        // public CrmTypology RoleTypology { get; set; }
-        // public CrmTypology StateTypology { get; set; }
+   
+        
     }
 }

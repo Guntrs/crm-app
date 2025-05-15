@@ -6,6 +6,7 @@ using crm_app.Repositories.Team;
 using crm_app.Repositories.Typologies;
 using crm_app.Repositories.TypologyRepository;
 using crm_app.Repositories.User;
+using crm_app.Repositories.UserTeam;
 using crm_app.Utils;
 using Evolve;  //biblioteca de Migraciones (1)
 using Npgsql;  //proveedor de PostgreSql
@@ -44,7 +45,13 @@ catch (Exception ex)
 builder.Services.AddDbContext<EntityDbContext>(options => options.UseNpgsql(connectionString));
 
 //habilitar Controladores
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+{
+    //para valores nulos en la salida json 05/25
+    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
+});
+
 
 //-------------------------------------------------
 //Registrar El repositorio
@@ -53,7 +60,7 @@ builder.Services.AddScoped<ICrmTeamRepository, CrmTeamRepository>();
 builder.Services.AddScoped<ICrmEstablishmentRepository, CrmEstablishmentRepository>();
 builder.Services.AddScoped<ICrmPersonRepository, CrmPersonRepository>();
 builder.Services.AddScoped<ICrmUserRepository, CrmUserRepository>();
-
+builder.Services.AddScoped<ICrmUserTeamRepository, CrmUserTeamRepository>();
 
 //------------------------------------------------
 builder.Services.AddEndpointsApiExplorer();
