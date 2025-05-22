@@ -7,6 +7,7 @@ using crm_app.Dto.User;
 using crm_app.Models.General;
 using crm_core.Utils;
 using AppContext = crm_app.Utils.EntityDbContext;
+using Microsoft.AspNetCore.Identity;
 
 namespace crm_app.Repositories.User
 {
@@ -97,7 +98,7 @@ namespace crm_app.Repositories.User
                 ParentUserId = userPostDto.ParentUserId,
                 PersonId = userPostDto.PersonId,
                 UserName = userPostDto.UserName,
-                Password = userPostDto.Password,
+                // Password la asignas después del hashing,
                 PasswordChangeDate = CrmFunctions.GetDateTime(),
                 AccessAttempt = 0,
                 FullName = userPostDto.FullName,
@@ -113,6 +114,11 @@ namespace crm_app.Repositories.User
                 ModifiedBy = 0,
                 ModificationDate = CrmFunctions.GetDateTime()
             };
+            
+            // -------------- hash ---------------
+            var hasher = new PasswordHasher<CrmUser>();
+            user.Password = hasher.HashPassword(user, userPostDto.Password);
+            // ---------------------------------------------------
 
             // Agregar al contexto
             await _context.User.AddAsync(user);
@@ -165,7 +171,15 @@ namespace crm_app.Repositories.User
             user.ParentUserId = dto.ParentUserId;
             user.PersonId = dto.PersonId;
             user.UserName = dto.UserName;
-            user.Password = dto.Password;
+            
+            
+            if (!string.IsNullOrEmpty(dto.Password))
+            {
+                var hasher = new PasswordHasher<CrmUser>();
+                user.Password = hasher.HashPassword(user, dto.Password);
+            }
+
+            
             user.FullName = dto.FullName;
             user.UserEmail = dto.UserEmail;
             user.UserPhone = dto.UserPhone;
@@ -184,9 +198,11 @@ namespace crm_app.Repositories.User
             return true;
         }
         
-        /// <summary>
-        /// Busca un usuario por su nombre de usuario (UserName) en la base de datos.
-        /// </summary>
+        
+        
+        
+      
+        /// Busca un usuario por su nombre de usuario (UserName) en la base de datos
         /// <param name="userName">Nombre de usuario a buscar</param>
         /// <returns>UserDto o null si no existe</returns>
         public async Task<UserDto?> GetByUserNameAsync(string userName)

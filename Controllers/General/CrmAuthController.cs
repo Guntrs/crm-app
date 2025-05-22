@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using crm_app.Dto.User;
 using crm_app.Repositories.User;
+using Microsoft.AspNetCore.Identity;
 
 namespace crm_app.Controllers
 {
@@ -22,17 +23,18 @@ namespace crm_app.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Buscar usuario por nombre de usuario (UserName)
+            // 1) Buscar usuario por UserName
             var user = await _userRepository.GetByUserNameAsync(loginDto.UserName);
-
             if (user == null)
                 return Unauthorized(new { message = "Usuario o contraseña incorrectos." });
 
-            // Validar contraseña (texto plano por ahora)
-            if (user.Password != loginDto.Password)
+            // 2) Verificar hash en lugar de comparar texto
+            var hasher = new PasswordHasher<UserDto>();
+            var result = hasher.VerifyHashedPassword(user, user.Password, loginDto.Password);
+            if (result == PasswordVerificationResult.Failed)
                 return Unauthorized(new { message = "Usuario o contraseña incorrectos." });
 
-            // Si todo está bien, responde OK
+            // 3) Si todo OK
             return Ok(new { message = "Login exitoso", userId = user.UserId });
         }
     }
