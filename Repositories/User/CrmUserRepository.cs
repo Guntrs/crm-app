@@ -183,5 +183,42 @@ namespace crm_app.Repositories.User
             await _context.SaveChangesAsync();
             return true;
         }
+        
+        /// <summary>
+        /// Busca un usuario por su nombre de usuario (UserName) en la base de datos.
+        /// </summary>
+        /// <param name="userName">Nombre de usuario a buscar</param>
+        /// <returns>UserDto o null si no existe</returns>
+        public async Task<UserDto?> GetByUserNameAsync(string userName)
+        {
+            return await _context.User
+                .Where(u => u.UserName == userName)
+                .Select(u => new UserDto
+                {
+                    // Mapea todos los campos del usuario
+                    UserId = u.UserId,
+                    UserKey = u.UserKey,
+                    ParentUserId = u.ParentUserId,
+                    PersonId = u.PersonId,
+                    UserName = u.UserName,
+                    Password = u.Password,
+                    PasswordChangeDate = u.PasswordChangeDate,
+                    AccessAttempt = u.AccessAttempt,
+                    FullName = u.FullName,
+                    UserEmail = u.UserEmail,
+                    UserPhone = u.UserPhone,
+                    ProfessionalNumber = u.ProfessionalNumber,
+                    Signature = u.Signature,
+                    ImageUrl = u.ImageUrl,
+                    ContactStatus = u.ContactStatus,
+                    State = u.State,
+                    CreatedBy = u.CreatedBy,
+                    CreationDate = u.CreationDate,
+                    ModifiedBy = u.ModifiedBy,
+                    ModificationDate = u.ModificationDate
+                })
+                .FirstOrDefaultAsync();
+        }
+        
     }
 }
