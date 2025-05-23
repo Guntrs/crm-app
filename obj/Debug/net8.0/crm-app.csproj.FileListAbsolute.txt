@@ -108,3 +108,11 @@ C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\obj\Debug\net8.0\crm-ap
 C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\obj\Debug\net8.0\ref\crm-app.dll
 C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Evolve.dll
 C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\obj\Debug\net8.0\crm-app.sourcelink.json
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Gunter\Desktop\PeopleApps\2.Rider\6.CRM\crm-app\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll

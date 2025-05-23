@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using crm_app.Dto.User;
 using crm_app.Repositories.User;
 using Microsoft.AspNetCore.Identity;
+using crm_app.Security;
 
 namespace crm_app.Controllers
 {
@@ -11,10 +12,12 @@ namespace crm_app.Controllers
     {
         // Inyecta repositorio o servicio si lo necesitas más adelante
         private readonly ICrmUserRepository _userRepository;
+        private readonly CrmJwtService _jwtService;
 
-        public AuthController(ICrmUserRepository userRepository)
+        public AuthController(ICrmUserRepository userRepository, CrmJwtService jwtService)
         {
             _userRepository = userRepository;
+            _jwtService = jwtService;
         }
 
         [HttpPost("login")]
@@ -34,8 +37,11 @@ namespace crm_app.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized(new { message = "Usuario o contraseña incorrectos." });
 
-            // 3) Si todo OK
-            return Ok(new { message = "Login exitoso", userId = user.UserId });
+            // 3) Si todo OK, genera el token
+            var token = _jwtService.GenerateToken(user.UserId, user.UserName);
+
+            // Devuelve el token al frontend
+            return Ok(new { message = "Login exitoso", token = token });
         }
     }
 }

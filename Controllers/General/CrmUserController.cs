@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using crm_app.Dto.User;
 
 using crm_app.Repositories.User;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crm_app.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
