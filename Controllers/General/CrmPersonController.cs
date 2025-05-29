@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using crm_app.Dto.Person;
 using crm_app.Dto.Team;
 using crm_app.Repositories.Person;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crm_app.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PersonController : ControllerBase

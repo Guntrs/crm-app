@@ -22,6 +22,8 @@ using Microsoft.EntityFrameworkCore; //  EF Core
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 //---------------------------------------------------------------------------------------------
 //cadena de conexion del appsetting.js  (2)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -96,7 +98,26 @@ builder.Services.AddScoped<ICrmUserTeamRepository, CrmUserTeamRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//habilitar cors
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200") // el puerto de tu frontend
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
+
+
+//habilitar cors
+app.UseCors(MyAllowSpecificOrigins);
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
