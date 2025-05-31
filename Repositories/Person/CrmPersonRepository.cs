@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using crm_app.Dto.Establishment;
 using crm_app.Dto.Person;
+using crm_app.Dto.Typology;
 using crm_app.Models.General;
 using crm_core.Utils;
 using AppContext = crm_app.Utils.EntityDbContext;
@@ -18,6 +19,74 @@ namespace crm_app.Repositories.Person
         {
             _context = context;
         }
+        //----------listar
+        public async Task<IEnumerable<PersonDto>> GetAll()
+        {
+            var personQuery = _context.Person.AsQueryable();
+
+            // Aquí puedes agregar filtros si los necesitas:
+            // userTeamsQuery = userTeamsQuery.Where(...);
+
+            var result = MapeoPersonDto(personQuery);
+
+            return await Task.FromResult(result);
+        }
+        
+        //----------- Mapeo con joins y TypologyDto
+        private List<PersonDto> MapeoPersonDto(IQueryable<CrmPerson> persons)
+        {
+            return (
+                from p in persons
+
+                join g in _context.Typologies on p.Gender equals g.TypologyId into genderGroup
+                from gender in genderGroup.DefaultIfEmpty()
+
+                join bt in _context.Typologies on p.BloodType equals bt.TypologyId into bloodTypeGroup
+                from bloodType in bloodTypeGroup.DefaultIfEmpty()
+
+                join st in _context.Typologies on p.State equals st.TypologyId into stateGroup
+                from state in stateGroup.DefaultIfEmpty()
+
+                orderby p.PersonId descending
+                select new PersonDto
+                {
+                    PersonId = p.PersonId,
+                    PersonKey = p.PersonKey,
+                    FirstName = p.FirstName,
+                    SecondName = p.SecondName,
+                    FirstSurname = p.FirstSurname,
+                    SecondSurname = p.SecondSurname,
+                    Birthdate = p.Birthdate,
+                    Profession = p.Profession,
+                    CUI = p.CUI,
+                    NIT = p.NIT,
+                    Email = p.Email,
+                    PhoneNumber = p.PhoneNumber,
+                    SecondaryPhoneNumber = p.SecondaryPhoneNumber,
+                    Address = p.Address,
+                    CreatedBy = p.CreatedBy,
+                    CreationDate = p.CreationDate,
+                    ModifiedBy = p.ModifiedBy,
+                    ModificationDate = p.ModificationDate,
+
+                    Gender = gender == null ? null : new TypologyDto() {
+                        TypologyId = gender.TypologyId,
+                        Description = gender.Description,
+                        // agrega otros campos si los tienes en TypologyDto
+                    },
+                    BloodType = bloodType == null ? null : new TypologyDto {
+                        TypologyId = bloodType.TypologyId,
+                        Description = bloodType.Description
+                    },
+                    State = state == null ? null : new TypologyDto {
+                        TypologyId = state.TypologyId,
+                        Description = state.Description
+                    }
+                }
+            ).ToList();
+        }
+        
+        /*
         
         //----------listar
         public async Task<IEnumerable<PersonDto>> GetAll()
@@ -50,8 +119,9 @@ namespace crm_app.Repositories.Person
                 })
                 .ToListAsync();
                 
-        }
+        }*/
         
+        /*
         //----------- Buscar por su ID ------------------
         public async Task<PersonDto?> GetByIdAsync(long id)
         {
@@ -82,8 +152,10 @@ namespace crm_app.Repositories.Person
                     ModificationDate = p.ModificationDate
                 })
                 .FirstOrDefaultAsync();
-        }
+        }*/
         
+        
+        /*
                 //----------- Nuevo ------------------
         public async Task<PersonDto> CreateAsync(PersonPostDto personPostDto)
         {
@@ -145,7 +217,7 @@ namespace crm_app.Repositories.Person
             };
 
             return createdDto;
-        }
+        }*/
         
         // --------------------Actualizar ------------------
         public async Task<bool> UpdateAsync(long id, PersonPutDto dto)

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using crm_app.Dto.UserTeam;
 using crm_app.Repositories.UserTeam;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crm_app.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserTeamController : ControllerBase

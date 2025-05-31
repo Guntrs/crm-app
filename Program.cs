@@ -106,12 +106,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200") // el puerto de tu frontend
+            policy.WithOrigins(
+                    "http://localhost:4200", // frontend Angular
+                    "https://localhost:4200" // si usas https en Angular
+                )
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
 });
-
 var app = builder.Build();
 
 
