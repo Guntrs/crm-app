@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks; 
 using crm_app.Dto.Typology;
 using crm_app.Repositories.Typologies; 
+using Microsoft.AspNetCore.Authorization;
 
 namespace crm_app.Controllers
 {
+    [Authorize]
     [ApiController] 
     [Route("api/[controller]")] 
     public class TypologyController : ControllerBase
@@ -34,6 +36,15 @@ namespace crm_app.Controllers
                 return NotFound();
 
             return Ok(typology);
+        }
+        
+        //--------------
+        // GET: api/Typology/by-parent/100
+        [HttpGet("by-parent/{parentId}")]
+        public async Task<ActionResult<IEnumerable<TypologyDto>>> GetByParentId(long parentId)
+        {
+            var result = await _repository.GetByParentIdAsync(parentId);
+            return Ok(result);
         }
     }
 }

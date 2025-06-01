@@ -15,5 +15,8 @@ namespace crm_app.Repositories.Typologies
         //Listar ID
         public Task<TypologyDto?> GetByIdAsync(int id);
         
+        // Listar por tipo de tipología 
+        Task<IEnumerable<TypologyDto>> GetByParentIdAsync(long parentId);
+        
     }
 }

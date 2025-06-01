@@ -9,18 +9,18 @@ namespace crm_app.Repositories.Person
     {
         //ListarPersonas
         public Task<IEnumerable<PersonDto>> GetAll();
-        /*
+        
         //buscar por id
        public Task<PersonDto?> GetByIdAsync(long id);
      
         
-     
+        
         // Nuevo
         public Task<PersonDto> CreateAsync(PersonPostDto person);
         
         //actualizar
         public Task<bool> UpdateAsync(long id, PersonPutDto updatepersonDto);
-        */
+        
         
     }
 }

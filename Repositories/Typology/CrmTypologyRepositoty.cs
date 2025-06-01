@@ -49,5 +49,19 @@ namespace crm_app.Repositories.TypologyRepository
                 })
                 .FirstOrDefaultAsync();
         }
+        
+        //-----------
+        public async Task<IEnumerable<TypologyDto>> GetByParentIdAsync(long parentId)
+        {
+            return await _context.Typologies
+                .Where(t => t.ParentTypologyId == parentId)
+                .Select(t => new TypologyDto
+                {
+                    TypologyId = t.TypologyId,
+                    Description = t.Description
+                    // Solo pon aquí los campos que NECESITAS para el combo
+                })
+                .ToListAsync();
+        }
     }
 }

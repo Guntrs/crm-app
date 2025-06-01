@@ -86,48 +86,23 @@ namespace crm_app.Repositories.Person
             ).ToList();
         }
         
-        /*
-        
-        //----------listar
-        public async Task<IEnumerable<PersonDto>> GetAll()
-        {
-            return await _context.Person
-                .Select(p=>new PersonDto
-                {
-                    PersonId = p.PersonId,
-                    PersonKey = p.PersonKey,
-                    FirstName = p.FirstName,
-                    SecondName = p.SecondName,
-                    FirstSurname = p.FirstSurname,
-                    SecondSurname = p.SecondSurname,
-                    Birthdate = p.Birthdate,
-                    Gender = p.Gender,
-                    BloodType = p.BloodType,
-                    Profession = p.Profession,
-                    CUI = p.CUI,
-                    NIT = p.NIT,
-                    Email = p.Email,
-                    PhoneNumber = p.PhoneNumber,
-                    SecondaryPhoneNumber = p.SecondaryPhoneNumber,
-                    Address = p.Address,
-                    State = p.State,
-                    CreatedBy = p.CreatedBy,
-                    CreationDate = p.CreationDate,
-                    ModifiedBy = p.ModifiedBy,
-                    ModificationDate = p.ModificationDate
-                    
-                })
-                .ToListAsync();
-                
-        }*/
-        
-        /*
-        //----------- Buscar por su ID ------------------
+        //-----------BUSCAR POR ID
         public async Task<PersonDto?> GetByIdAsync(long id)
         {
-            return await _context.Person
-                .Where(p => p.PersonId == id)
-                .Select(p => new PersonDto
+            var result = await (
+                from p in _context.Person
+                where p.PersonId == id
+
+                join g in _context.Typologies on p.Gender equals g.TypologyId into genderGroup
+                from gender in genderGroup.DefaultIfEmpty()
+
+                join bt in _context.Typologies on p.BloodType equals bt.TypologyId into bloodTypeGroup
+                from bloodType in bloodTypeGroup.DefaultIfEmpty()
+
+                join st in _context.Typologies on p.State equals st.TypologyId into stateGroup
+                from state in stateGroup.DefaultIfEmpty()
+
+                select new PersonDto
                 {
                     PersonId = p.PersonId,
                     PersonKey = p.PersonKey,
@@ -136,8 +111,6 @@ namespace crm_app.Repositories.Person
                     FirstSurname = p.FirstSurname,
                     SecondSurname = p.SecondSurname,
                     Birthdate = p.Birthdate,
-                    Gender = p.Gender,
-                    BloodType = p.BloodType,
                     Profession = p.Profession,
                     CUI = p.CUI,
                     NIT = p.NIT,
@@ -145,17 +118,31 @@ namespace crm_app.Repositories.Person
                     PhoneNumber = p.PhoneNumber,
                     SecondaryPhoneNumber = p.SecondaryPhoneNumber,
                     Address = p.Address,
-                    State = p.State,
                     CreatedBy = p.CreatedBy,
                     CreationDate = p.CreationDate,
                     ModifiedBy = p.ModifiedBy,
-                    ModificationDate = p.ModificationDate
-                })
-                .FirstOrDefaultAsync();
-        }*/
+                    ModificationDate = p.ModificationDate,
+
+                    Gender = gender == null ? null : new TypologyDto {
+                        TypologyId = gender.TypologyId,
+                        Description = gender.Description
+                    },
+                    BloodType = bloodType == null ? null : new TypologyDto {
+                        TypologyId = bloodType.TypologyId,
+                        Description = bloodType.Description
+                    },
+                    State = state == null ? null : new TypologyDto {
+                        TypologyId = state.TypologyId,
+                        Description = state.Description
+                    }
+                }
+            ).FirstOrDefaultAsync();
+
+            return result;
+        }
         
         
-        /*
+        
                 //----------- Nuevo ------------------
         public async Task<PersonDto> CreateAsync(PersonPostDto personPostDto)
         {
@@ -189,6 +176,16 @@ namespace crm_app.Repositories.Person
 
             // Guardar cambios
             await _context.SaveChangesAsync();
+            
+            // Obtén las tipologías relacionadas (puedes hacer un solo query si quieres performance, aquí lo hago simple)
+            var genderTypology = await _context.Typologies
+                .FirstOrDefaultAsync(t => t.TypologyId == person.Gender);
+
+            var bloodTypeTypology = await _context.Typologies
+                .FirstOrDefaultAsync(t => t.TypologyId == person.BloodType);
+
+            var stateTypology = await _context.Typologies
+                .FirstOrDefaultAsync(t => t.TypologyId == person.State);
 
             // Mapear al DTO de salida
             var createdDto = new PersonDto
@@ -200,8 +197,7 @@ namespace crm_app.Repositories.Person
                 FirstSurname = person.FirstSurname,
                 SecondSurname = person.SecondSurname,
                 Birthdate = person.Birthdate,
-                Gender = person.Gender,
-                BloodType = person.BloodType,
+             
                 Profession = person.Profession,
                 CUI = person.CUI,
                 NIT = person.NIT,
@@ -209,15 +205,34 @@ namespace crm_app.Repositories.Person
                 PhoneNumber = person.PhoneNumber,
                 SecondaryPhoneNumber = person.SecondaryPhoneNumber,
                 Address = person.Address,
-                State = person.State,
+           
                 CreatedBy = person.CreatedBy,
                 CreationDate = person.CreationDate,
                 ModifiedBy = person.ModifiedBy,
-                ModificationDate = person.ModificationDate
+                ModificationDate = person.ModificationDate,
+                
+                Gender = genderTypology == null ? null : new TypologyDto
+                {
+                    TypologyId = genderTypology.TypologyId,
+                    Description = genderTypology.Description
+                },
+                BloodType = bloodTypeTypology == null ? null : new TypologyDto
+                {
+                    TypologyId = bloodTypeTypology.TypologyId,
+                    Description = bloodTypeTypology.Description
+                },
+                State = stateTypology == null ? null : new TypologyDto
+                {
+                    TypologyId = stateTypology.TypologyId,
+                    Description = stateTypology.Description
+                }
+                
+                
+                
             };
 
             return createdDto;
-        }*/
+        }
         
         // --------------------Actualizar ------------------
         public async Task<bool> UpdateAsync(long id, PersonPutDto dto)
