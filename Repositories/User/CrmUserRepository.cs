@@ -136,81 +136,9 @@ namespace crm_app.Repositories.User
         }
         
         
-        /*
-        //----------listar
-        public async Task<IEnumerable<UserDto>> GetAll()
-        {
-            return await _context.User
-                .Select(p=>new UserDto
-                {
-                    UserId = p.UserId,
-                    UserKey = p.UserKey,
-                    ParentUserId = p.ParentUserId,
-                    PersonId = p.PersonId,
-                    
-                    UserName = p.UserName,
-                    Password = p.Password,
-                    PasswordChangeDate = p.PasswordChangeDate,
-                    AccessAttempt = p.AccessAttempt,
-                    FullName = p.FullName,
-                    UserEmail = p.UserEmail,
-                    UserPhone = p.UserPhone,
-                    ProfessionalNumber = p.ProfessionalNumber,
-                    Signature = p.Signature,
-                    ImageUrl = p.ImageUrl,
-                    ContactStatus = p.ContactStatus,
-                    
-                    State = p.State,
-                    CreatedBy = p.CreatedBy,
-                    CreationDate = p.CreationDate,
-                    ModifiedBy = p.ModifiedBy,
-                    ModificationDate = p.ModificationDate
-                    
-                })
-                .ToListAsync();
-                
-        }
-        */
+    
         
         
-        
-        /*
-        //----------- Buscar por su ID ------------------
-        public async Task<UserDto?> GetByIdAsync(long id)
-        {
-            return await _context.User
-                .Where(p => p.UserId == id)
-                .Select(p => new UserDto
-                {
-                    UserId = p.UserId,
-                    UserKey = p.UserKey,
-                    ParentUserId = p.ParentUserId,
-                    PersonId = p.PersonId,
-                    
-                    UserName = p.UserName,
-                    Password = p.Password,
-                    PasswordChangeDate = p.PasswordChangeDate,
-                    AccessAttempt = p.AccessAttempt,
-                    FullName = p.FullName,
-                    UserEmail = p.UserEmail,
-                    UserPhone = p.UserPhone,
-                    ProfessionalNumber = p.ProfessionalNumber,
-                    Signature = p.Signature,
-                    ImageUrl = p.ImageUrl,
-                    ContactStatus = p.ContactStatus,
-                    
-                    State = p.State,
-                    CreatedBy = p.CreatedBy,
-                    CreationDate = p.CreationDate,
-                    ModifiedBy = p.ModifiedBy,
-                    ModificationDate = p.ModificationDate
-                })
-                .FirstOrDefaultAsync();
-        }
-        
-        */
-        
-        /*
          //----------- Nuevo------------------
         public async Task<UserDto> CreateAsync(UserPostDto userPostDto)
         {
@@ -248,6 +176,16 @@ namespace crm_app.Repositories.User
 
             // Guardar cambios
             await _context.SaveChangesAsync();
+            
+            // Obtén las tipologías relacionadas (puedes hacer un solo query si quieres performance, aquí lo hago simple)
+            
+
+            var stateTypology = await _context.Typologies
+                .FirstOrDefaultAsync(t => t.TypologyId == user.State);
+            
+            var contactTypeTypology = await _context.Typologies
+                .FirstOrDefaultAsync(t => t.TypologyId == user.ContactStatus);
+            
 
             // Mapear al DTO de salida
             var createdDto = new UserDto
@@ -266,8 +204,17 @@ namespace crm_app.Repositories.User
                 ProfessionalNumber = user.ProfessionalNumber,
                 Signature = user.Signature,
                 ImageUrl = user.ImageUrl,
-                ContactStatus = user.ContactStatus,
-                State = user.State,
+               // ContactStatus = user.ContactStatus,
+                ContactStatus  = contactTypeTypology == null ? null : new TypologyDto
+                {
+                    TypologyId = contactTypeTypology.TypologyId,
+                    Description = contactTypeTypology.Description
+                },
+                State = stateTypology == null ? null : new TypologyDto
+                {
+                    TypologyId = stateTypology.TypologyId,
+                    Description = stateTypology.Description
+                },
                 CreatedBy = user.CreatedBy,
                 CreationDate = user.CreationDate,
                 ModifiedBy = user.ModifiedBy,
@@ -277,7 +224,7 @@ namespace crm_app.Repositories.User
 
             return createdDto;
         }
-        */
+        
         
         
         
