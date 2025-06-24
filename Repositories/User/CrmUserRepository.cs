@@ -6,6 +6,7 @@ using crm_app.Dto.Establishment;
 using crm_app.Dto.User;
 using crm_app.Models.General;
 using crm_core.Utils;
+using crm_app.Dto.Typology;
 using AppContext = crm_app.Utils.EntityDbContext;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,6 +21,122 @@ namespace crm_app.Repositories.User
             _context = context;
         }
         
+        //----------listar
+        public async Task<IEnumerable<UserDto>> GetAll()
+        {
+            var userQuery = _context.User.AsQueryable();
+
+            // Mapear usando el método
+            var result = MapeoUserDto(userQuery);
+
+            return await Task.FromResult(result);
+        }
+        
+        //----------- Método privado de mapeo con joins
+        private List<UserDto> MapeoUserDto(IQueryable<CrmUser> users)
+        {
+            return (
+                from u in users
+
+                join st in _context.Typologies on u.State equals st.TypologyId into stateGroup
+                from state in stateGroup.DefaultIfEmpty()
+
+                join cs in _context.Typologies on u.ContactStatus equals cs.TypologyId into contactStatusGroup
+                from contactStatus in contactStatusGroup.DefaultIfEmpty()
+
+                orderby u.UserId descending
+
+                select new UserDto
+                {
+                    UserId = u.UserId,
+                    UserKey = u.UserKey,
+                    ParentUserId = u.ParentUserId,
+                    PersonId = u.PersonId,
+
+                    UserName = u.UserName,
+                    Password = u.Password,
+                    PasswordChangeDate = u.PasswordChangeDate,
+                    AccessAttempt = u.AccessAttempt,
+                    FullName = u.FullName,
+                    UserEmail = u.UserEmail,
+                    UserPhone = u.UserPhone,
+                    ProfessionalNumber = u.ProfessionalNumber,
+                    Signature = u.Signature,
+                    ImageUrl = u.ImageUrl,
+
+                    CreatedBy = u.CreatedBy,
+                    CreationDate = u.CreationDate,
+                    ModifiedBy = u.ModifiedBy,
+                    ModificationDate = u.ModificationDate,
+
+                    State = state == null ? null : new TypologyDto
+                    {
+                        TypologyId = state.TypologyId,
+                        Description = state.Description
+                    },
+                    ContactStatus = contactStatus == null ? null : new TypologyDto
+                    {
+                        TypologyId = contactStatus.TypologyId,
+                        Description = contactStatus.Description
+                    }
+                }
+            ).ToList();
+        }
+
+//----------- Buscar por su ID ------------------
+        public async Task<UserDto?> GetByIdAsync(long id)
+        {
+            var query = (
+                from u in _context.User
+                where u.UserId == id
+
+                join st in _context.Typologies on u.State equals st.TypologyId into stateGroup
+                from state in stateGroup.DefaultIfEmpty()
+
+                join cs in _context.Typologies on u.ContactStatus equals cs.TypologyId into contactStatusGroup
+                from contactStatus in contactStatusGroup.DefaultIfEmpty()
+
+                select new UserDto
+                {
+                    UserId = u.UserId,
+                    UserKey = u.UserKey,
+                    ParentUserId = u.ParentUserId,
+                    PersonId = u.PersonId,
+
+                    UserName = u.UserName,
+                    Password = u.Password,
+                    PasswordChangeDate = u.PasswordChangeDate,
+                    AccessAttempt = u.AccessAttempt,
+                    FullName = u.FullName,
+                    UserEmail = u.UserEmail,
+                    UserPhone = u.UserPhone,
+                    ProfessionalNumber = u.ProfessionalNumber,
+                    Signature = u.Signature,
+                    ImageUrl = u.ImageUrl,
+
+                    CreatedBy = u.CreatedBy,
+                    CreationDate = u.CreationDate,
+                    ModifiedBy = u.ModifiedBy,
+                    ModificationDate = u.ModificationDate,
+
+                    State = state == null ? null : new TypologyDto
+                    {
+                        TypologyId = state.TypologyId,
+                        Description = state.Description
+                    },
+                    ContactStatus = contactStatus == null ? null : new TypologyDto
+                    {
+                        TypologyId = contactStatus.TypologyId,
+                        Description = contactStatus.Description
+                    }
+                }
+            );
+
+            return await query.FirstOrDefaultAsync();
+        }
+        
+        
+        /*
         //----------listar
         public async Task<IEnumerable<UserDto>> GetAll()
         {
@@ -53,7 +170,11 @@ namespace crm_app.Repositories.User
                 .ToListAsync();
                 
         }
+        */
         
+        
+        
+        /*
         //----------- Buscar por su ID ------------------
         public async Task<UserDto?> GetByIdAsync(long id)
         {
@@ -87,7 +208,9 @@ namespace crm_app.Repositories.User
                 .FirstOrDefaultAsync();
         }
         
+        */
         
+        /*
          //----------- Nuevo------------------
         public async Task<UserDto> CreateAsync(UserPostDto userPostDto)
         {
@@ -154,6 +277,9 @@ namespace crm_app.Repositories.User
 
             return createdDto;
         }
+        */
+        
+        
         
         // --------------------Actualizar ------------------
         public async Task<bool> UpdateAsync(long id, UserPutDto dto)
@@ -226,8 +352,8 @@ namespace crm_app.Repositories.User
                     ProfessionalNumber = u.ProfessionalNumber,
                     Signature = u.Signature,
                     ImageUrl = u.ImageUrl,
-                    ContactStatus = u.ContactStatus,
-                    State = u.State,
+                    //ContactStatus = u.ContactStatus,
+                    //State = u.State,
                     CreatedBy = u.CreatedBy,
                     CreationDate = u.CreationDate,
                     ModifiedBy = u.ModifiedBy,
@@ -235,6 +361,8 @@ namespace crm_app.Repositories.User
                 })
                 .FirstOrDefaultAsync();
         }
+        
+        
         
     }
 }

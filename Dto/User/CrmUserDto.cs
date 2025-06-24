@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using crm_app.Dto.Typology;
 
 namespace crm_app.Dto.User
 {
@@ -43,13 +44,7 @@ namespace crm_app.Dto.User
         public string? Signature { get; set; }
 
         public string? ImageUrl { get; set; }
-
-      
-        public long ContactStatus { get; set; }
-
-      
-        public long State { get; set; }
-
+        
         public long CreatedBy { get; set; }
 
         public DateTime CreationDate { get; set; }
@@ -57,5 +52,11 @@ namespace crm_app.Dto.User
         public long ModifiedBy { get; set; }
 
         public DateTime ModificationDate { get; set; }
+        
+        //datos relacionados
+        public TypologyDto? State { get; set; }
+        
+        public TypologyDto? ContactStatus { get; set; }
+        
     }
 }

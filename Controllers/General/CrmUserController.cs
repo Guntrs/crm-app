@@ -42,7 +42,7 @@ namespace crm_app.Controllers
             });
         }
 
-        
+        /*
         //----------------------------Listar Id--------------------------
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
@@ -109,8 +109,7 @@ namespace crm_app.Controllers
             }
             return Ok(new { Message = "El Usuario se actualizó correctamente." });
         }
-        
-        
+        */
         
     }
 }

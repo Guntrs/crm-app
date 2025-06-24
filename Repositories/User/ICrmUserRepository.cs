@@ -10,6 +10,7 @@ namespace crm_app.Repositories.User
         //ListarPersonas
         public Task<IEnumerable<UserDto>> GetAll();
         
+        /*
         //buscar por id
         public Task<UserDto?> GetByIdAsync(long id);
      
@@ -18,6 +19,7 @@ namespace crm_app.Repositories.User
         
         //actualizar
         public Task<bool> UpdateAsync(long id, UserPutDto updateuserDto);
+        */
         
         /// <summary>
         /// Busca un usuario por su nombre de usuario (UserName).
