@@ -1,10 +1,6 @@
 # CRM App
 
-Aplicación CRM (Customer Relationship Management) desarrollada con **ASP.NET Core 8** y **PostgreSQL**, enfocada en la gestión de clientes, organizaciones, tipologías y usuarios.
-
----
-
-## 🚀 Tecnologías utilizadas
+##  Tecnologías utilizadas
 
 - **.NET 8 (ASP.NET Core Web API)**
 - **Entity Framework Core**
@@ -16,7 +12,7 @@ Aplicación CRM (Customer Relationship Management) desarrollada con **ASP.NET Co
 
 ---
 
-## 📂 Estructura del proyecto
+## Estructura del proyecto
 
 - **Controllers/** → Controladores de la API  
 - **Models/** → Modelos de datos (entidades)  
